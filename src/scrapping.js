@@ -58,19 +58,18 @@ Nakamoto.prototype.getEpisodes = async (nameAnime = 'Boku no Hero Academia') => 
   this.data = value;
 }
 
-Nakamoto.prototype.isNewEpisode = async (episode = false) => {
+Nakamoto.prototype.HasSomeOneNew = async (episode = false, newAnime = false) => {
+  const stream = fs.createWriteStream("animes.txt");
+  const hasNewEpisode = JSON.stringify(episode)
+  const hasNewAnime = JSON.stringify(newAnime)
   
-}
-
-Nakamoto.prototype.newAnimeAdded = async (newAnime = false) => {
-  var stream = fs.createWriteStream("animes.txt");
-  const test = JSON.stringify(newAnime)
   stream.once('open', function(fd) {
-    stream.write(test.toString(),'\n');
-    stream.write("My second row\n");
+    stream.write(hasNewEpisode + "\r\n");
+    stream.write(hasNewAnime + "\r\n");
     stream.end();
   });
 }
+
 
 Nakamoto.prototype.initScrapping = async (nameAnime) => {
 
@@ -163,13 +162,11 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
       await Nakamoto.prototype.CreateAnime(this.episodesSize,  nameToDB)
       this.newAnime = {
         name: nameToDB,
-        value: true
+        new: true
       };
     }
 
-    await Nakamoto.prototype.isNewEpisode(this.newEpisode)
-
-    await Nakamoto.prototype.newAnimeAdded(this.newAnime)
+    await Nakamoto.prototype.HasSomeOneNew(this.newEpisode, this.newAnime)
 
     await page.screenshot({ path: 'animes.png' });
 
