@@ -89,7 +89,9 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
 
     console.info(`The title is: ${title}`);
 
+   
     await page.type('input[id="s"]', nameAnime)
+  
 
     let click = await page.click('button[class="search-button"]')
 

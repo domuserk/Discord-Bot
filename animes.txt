@@ -1,2 +1,2 @@
 false
-{"name":"Boku no Hero Academia  ","value":true}
+{"name":"Boku no Hero Academia  ","new":true}
