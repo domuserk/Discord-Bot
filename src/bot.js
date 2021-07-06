@@ -17,6 +17,9 @@ NakamotoBot.prototype.init = async (newAnime) =>  {
         const idChannel = '849404264069595176'
         console.log('Bot Already!');
         const channel = await client.channels.fetch(idChannel);
+        if(!newAnime) {
+          return;
+        }
         channel.send(newAnime);
     });
     client.login(token);

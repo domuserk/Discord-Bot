@@ -21,11 +21,33 @@ const nakamotoBotInit = new NakamotoBot()
 app.use(cors());
 app.use(express.json());
 
+
+(async() => {
+  try {
+    const animeName = animes.forEach(async (anime) => {
+     await nakamotoInit.initScrapping(anime.name)
+     process.on("exit", function () {
+      require("child_process").spawn(process.argv.shift(), process.argv, {
+          cwd: process.cwd(),
+          detached : true,
+          stdio: "inherit"
+      });
+    });
+    process.exit();
+   });
+   
+  } catch(err) {
+    console.log(err)
+  }
+})();
+
+
 app.get('/' , async (req, res) => {
    try {
     const animeName = animes.forEach(async (anime) => {
     await nakamotoInit.initScrapping(anime.name)
    });
+   
     res.send()
    }catch(err) {
     console.log(err)
@@ -52,5 +74,6 @@ app.post('/animes-name', async(req, res) => {
     }
     
 })
+
 
 app.listen(process.env.PORT || 5000, () => console.log('working'))
