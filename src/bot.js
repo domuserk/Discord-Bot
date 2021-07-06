@@ -12,21 +12,20 @@ class NakamotoBot {
     }
 } 
 
-NakamotoBot.prototype.init = (newAnime) =>  {
-
-    client.once('ready', () => {
+NakamotoBot.prototype.init = async (newAnime) =>  {
+    client.on('ready', async () => {
+        const idChannel = '849404264069595176'
         console.log('Bot Already!');
+        const channel = await client.channels.fetch(idChannel);
+        channel.send(newAnime);
     });
+    client.login(token);
+    await NakamotoBot.prototype.resetBot()
+}
 
-    client.on('message', message => {
-
-        if(message.author.id === client.user.id) return
-
-        message.channel.send(newAnime)
-       
-    });
-
- client.login(token)
+NakamotoBot.prototype.resetBot = async () => {
+     await client.destroy()
+     await client.login(token);
 }
 
 module.exports = { NakamotoBot }
