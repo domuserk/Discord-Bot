@@ -22,17 +22,6 @@ app.use(cors());
 app.use(express.json());
 
 
-(async() => {
-  try {
-    const animeName = animes.forEach(async (anime) => {
-     await nakamotoInit.initScrapping(anime.name)
-   });
-   
-  } catch(err) {
-    console.log(err)
-  }
-})();
-
 
 
 app.get('/' , async (req, res) => {
