@@ -68,7 +68,14 @@ Nakamoto.prototype.HasSomeOneNew = async (episode = false, newAnime = false) => 
 
 Nakamoto.prototype.initScrapping = async (nameAnime) => {
 
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ 
+      headless: true,
+      args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+    ],
+    executablePath: '/usr/bin/chromium-browser'
+   });
 
     const page = await browser.newPage();
 
