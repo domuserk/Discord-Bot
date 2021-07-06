@@ -7,6 +7,9 @@ const dotenv = require('dotenv');
 app.use(cors());
 app.use(express.json());
 
+const { NakamotoBot } = require('./bot')
+
+const nakamotoBotInit = new NakamotoBot()
 
 var firebase = require('firebase/app');
 require('firebase/auth');
@@ -59,25 +62,13 @@ Nakamoto.prototype.getEpisodes = async (nameAnime = 'Boku no Hero Academia') => 
 }
 
 Nakamoto.prototype.HasSomeOneNew = async (episode = false, newAnime = false) => {
-  const stream = fs.createWriteStream("animes.txt");
-  const hasNewEpisode = JSON.stringify(episode)
-  const hasNewAnime = JSON.stringify(newAnime)
   
-  stream.once('open', function(fd) {
-    stream.write(hasNewEpisode + "\r\n");
-    stream.write(hasNewAnime + "\r\n");
-    stream.end();
-  });
 }
 
 
 Nakamoto.prototype.initScrapping = async (nameAnime) => {
 
     const browser = await puppeteer.launch({ headless: true });
-
-    browser.on('targetcreated', function(){
-        console.log('New Tab Created');
-    })
 
     const page = await browser.newPage();
 
@@ -86,8 +77,6 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
     await page.waitForSelector('title');
 
     const title = await page.title();
-
-    console.info(`The title is: ${title}`);
 
    
     await page.type('input[id="s"]', nameAnime)
@@ -135,11 +124,8 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
    
     const name = await page.title()
 
-    console.info(`The title is: ${name}`);
-
     const nameToDB = name.replace('Todos os Episodios Online - Animes Online', ' ')
 
-    console.info(`The title is: ${nameToDB}`);
     
     for(let i = 0; i < episodes.length; i++) {
       this.episodesSize =  episodes[i]
@@ -162,13 +148,10 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
 
     if(!this.data){
       await Nakamoto.prototype.CreateAnime(this.episodesSize,  nameToDB)
-      this.newAnime = {
-        name: nameToDB,
-        new: true
-      };
+      this.newAnime = nameToDB
     }
 
-    await Nakamoto.prototype.HasSomeOneNew(this.newEpisode, this.newAnime)
+    const NewAnime = await nakamotoBotInit.init(this.newAnime)
 
     await page.screenshot({ path: 'animes.png' });
 
@@ -177,71 +160,3 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
 
 module.exports = { Nakamoto }
 
-
-// app.listen(3000, () => {
-//     console.log('working');
-// })
-
-   // const html = await page.$eval('.episodios', (e) => e.lastElementChild.outerHTML);
-    // console.log(html)
-
-  //  const values = await resultHandle.evaluateHandle(() =>   document.body)
-     
-    //  const newValues = await page.evaluateHandle(
-    //     (body) => body.innerHTML,
-    //     values
-    //   );
-    
-    
-    // console.log((await page.content('ul[class="episodios"]')))
-
-
-    // let content = await pages[1].content()
-    // console.log(content)
-
-  
-     //   const aHandle = await pages[1].evaluateHandle(() => document.body);
-    // let jsonValue = await resultHandle.jsonValue();
-    // const search
-    // const word = await page.waitForSelector('input[name="keywords"]')
-
-    // /*if(word != '' ) {
-    //  console.log('aqui')
-    //  await page.type('input[name="keywords"]')
-    // }*/
-    
-    // await page.type('input[name="keywords"]', 'Desenvolvedor')
-
-    // await page.click('button[data-searchbar-type="JOBS"]');
-    
-    // await page.click('a[class="nav__button-secondary"]');
-    // const email = await page.type('input[id="username"]', process.env.EMAIL)
-    // const password = await page.type('input[id="password"]', process.env.PASSWORD)
-    // const errorPassword = await page.type('input[id="password"]')
-   
-    // await page.waitForSelector('input[id = "username"]', {
-    //     visible: true,
-    // });
-    // await page.waitForSelector('input[id="password"]', {
-    //     visible: true,
-    // });
-
-    // if (email != process.env.EMAIL || password != process.env.PASSWORD) {
-    //     console.log('aqui')
-    //     await page.type('input[id="username"]', '')
-    //     await page.type('input[id="password"]', '')
-    // }
-
-    // await page.click('button[class="btn__primary--large from__button--floating"]');
-    
-    // await page.waitForSelector('button[class="btn__secondary--large-muted"]', {
-    //     visible: true,
-    // });
-
-    // await page.click('button[class="btn__secondary--large-muted"]');
-  
-    // await page.waitForSelector('button[data-searchbar-type="JOBS"]', {
-    //     visible: true,
-    // });
-
-  

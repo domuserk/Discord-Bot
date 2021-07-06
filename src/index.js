@@ -22,19 +22,12 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/' , async (req, res) => {
-  try {
+   try {
     const animeName = animes.forEach(async (anime) => {
-      await nakamotoInit.initScrapping(anime.name)
-     });
-  
-     fs.readFile('animes.txt', 'utf8', async(err, data) => {
-      if (err) {
-       console.log(err);
-      }
-       const NewAnime = nakamotoBotInit.init(data)
-     })
+    await nakamotoInit.initScrapping(anime.name)
+   });
     res.send()
-  }catch(err) {
+   }catch(err) {
     console.log(err)
   }
 })
