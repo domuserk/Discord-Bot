@@ -26,7 +26,6 @@ app.use(express.json());
   try {
     const animeName = animes.forEach(async (anime) => {
      await nakamotoInit.initScrapping(anime.name)
-    process.exit(0);
    });
    
   } catch(err) {
