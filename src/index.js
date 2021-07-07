@@ -23,6 +23,20 @@ app.use(express.json());
 
 
 
+(async() => {
+  try {
+    const animeName = animes.forEach(async (anime) => {
+     await nakamotoInit.initScrapping(anime.name)
+    process.exit();
+   });
+   
+  } catch(err) {
+    console.log(err)
+  }
+})();
+
+
+
 
 app.get('/' , async (req, res) => {
    try {

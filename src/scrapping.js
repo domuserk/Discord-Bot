@@ -68,10 +68,9 @@ Nakamoto.prototype.HasSomeOneNew = async (episode = false, newAnime = false) => 
 
 Nakamoto.prototype.initScrapping = async (nameAnime) => {
 
-    const browser = await puppeteer.launch({ 
-      headless: true,
-   });
 
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+  
     const page = await browser.newPage();
 
     await page.goto('https://animesonline.cc/tv/');
