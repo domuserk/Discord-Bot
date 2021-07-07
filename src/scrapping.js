@@ -79,18 +79,20 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
 
     await page.goto('https://animesonline.cc/tv/');
 
-    const navigationPromise = page.waitForNavigation({ waitUntil: "domcontentloaded"});
-
     await page.waitForSelector('title');
 
     const title = await page.title();
 
-    await page.waitForSelector('input[id="s"]')
+    await page.waitForSelector('input[id="s"]', {
+      visible: true,
+    });
 
     await page.type('input[id="s"]', nameAnime)
   
-    await page.waitForSelector('button[class="search-button"]')
-
+    await page.waitForSelector('button[class="search-button"]', {
+      visible: true,
+    });
+    
     let click = await page.click('button[class="search-button"]')
 
     let pages = await browser.pages();
