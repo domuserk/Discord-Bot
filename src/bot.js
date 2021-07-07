@@ -22,13 +22,13 @@ NakamotoBot.prototype.init = async (newAnime) =>  {
         }
         channel.send(newAnime);
     });
-    client.login(token);
+    client.login(token | process.env.token);
     await NakamotoBot.prototype.resetBot()
 }
 
 NakamotoBot.prototype.resetBot = async () => {
      await client.destroy()
-     await client.login(token);
+     await client.login(token | process.env.token);
 }
 
 module.exports = { NakamotoBot }
