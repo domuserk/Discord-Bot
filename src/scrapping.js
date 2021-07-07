@@ -79,6 +79,8 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
 
     await page.goto('https://animesonline.cc/tv/');
 
+    const navigationPromise = page.waitForNavigation({ waitUntil: "domcontentloaded"});
+
     await page.waitForSelector('title');
 
     const title = await page.title();
@@ -117,7 +119,7 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
       (body) => body.innerHTML,
       aHandle
     );
-    
+
     const result = await resultHandle.jsonValue();
 
   
