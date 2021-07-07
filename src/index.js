@@ -58,4 +58,4 @@ app.post('/animes-name', async(req, res) => {
 })
 
 
-app.listen(process.env.PORT || 5000, () => console.log('working'))
+app.listen(process.env.PORT || 3000, () => console.log('working'))
