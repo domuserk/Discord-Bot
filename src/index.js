@@ -22,6 +22,7 @@ app.use(cors());
 app.use(express.json());
 
 
+
 (async() => {
   try {
     const animeName = animes.forEach(async (anime) => {
@@ -33,6 +34,8 @@ app.use(express.json());
     console.log(err)
   }
 })();
+
+
 
 
 app.get('/' , async (req, res) => {
