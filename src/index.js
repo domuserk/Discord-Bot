@@ -26,13 +26,6 @@ app.use(express.json());
   try {
     const animeName = animes.forEach(async (anime) => {
      await nakamotoInit.initScrapping(anime.name)
-     process.on("exit", function () {
-      require("child_process").spawn(process.argv.shift(), process.argv, {
-          cwd: process.cwd(),
-          detached : true,
-          stdio: "inherit"
-      });
-    });
     process.exit();
    });
    
