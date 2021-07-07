@@ -83,14 +83,13 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
 
     const title = await page.title();
 
-   
+    await page.waitForSelector('input[id="s"]')
+
     await page.type('input[id="s"]', nameAnime)
   
+    await page.waitForSelector('button[class="search-button"]')
 
     let click = await page.click('button[class="search-button"]')
-
- 
-
 
     let pages = await browser.pages();
 
@@ -109,8 +108,6 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
 
     let content = await pages[1].content()
 
- 
-
     const aHandle = await page.evaluateHandle(() => 
       document.getElementById("seasons").lastElementChild
       
@@ -120,6 +117,7 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
       (body) => body.innerHTML,
       aHandle
     );
+    
     const result = await resultHandle.jsonValue();
 
   
