@@ -18,23 +18,52 @@ const nakamotoInit = new Nakamoto()
 
 const nakamotoBotInit = new NakamotoBot()
 
+
 app.use(cors());
 app.use(express.json());
 
+class InitHome {
+  constructor() {
+    this.value;
+  }
+}
 
 
-(async() => {
+
+this.value = async () => {
   try {
+    var counter = 0;
     const animeName = animes.forEach(async (anime) => {
      await nakamotoInit.initScrapping(anime.name)
-    process.exit(0);
+     counter++
+     if(counter == 3) {
+       await Promisse()
+     }
    });
    
   } catch(err) {
     console.log(err)
   }
-})();
+}
 
+(async() => {
+  await this.value()
+})()
+
+const Promisse = async () => {
+    fs.readFile('restartCommand.txt', 'utf8', async (err, data) => {
+      const value = data.toLowerCase();
+      const newValue = value.toString();
+      if (newValue == 'false') {
+        this.value();
+
+      }
+      if (err) {
+        console.log(err);
+      }
+    })
+}
+ 
 
 
 
@@ -70,6 +99,5 @@ app.post('/animes-name', async(req, res) => {
     }
     
 })
-
 
 app.listen(process.env.PORT || 3000, () => console.log('working'))
