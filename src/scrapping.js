@@ -32,8 +32,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-
-
 class Nakamoto {
   constructor() {
     this.data;
@@ -42,6 +40,7 @@ class Nakamoto {
     this.loading = false;
     this.newEpisode = false;
     this.newAnime = false;
+    this.restart;
   }
   
 }
@@ -61,8 +60,14 @@ Nakamoto.prototype.getEpisodes = async (nameAnime = 'Boku no Hero Academia') => 
   this.data = value;
 }
 
-Nakamoto.prototype.HasSomeOneNew = async (episode = false, newAnime = false) => {
+Nakamoto.prototype.HasSomeOneNew = (newAnime) => {
+  const stream = fs.createWriteStream("restartCommand.txt");
+  const hasNewAnime = JSON.stringify(newAnime)
   
+  stream.once('open', function(fd) {
+    stream.write(hasNewAnime);
+    stream.end();
+  });
 }
 
 
@@ -154,14 +159,22 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
         this.newEpisode = true;
       }
     }
-
+    console.log('chamou')
     if(!this.data){
       await Nakamoto.prototype.CreateAnime(this.episodesSize,  nameToDB)
       this.newAnime = nameToDB
     }
 
-    const NewAnime = await nakamotoBotInit.init(this.newAnime)
-
+    if(this.newAnime) {
+      const NewAnime = await nakamotoBotInit.init(this.newAnime)
+      const restart = Nakamoto.prototype.HasSomeOneNew(true)
+    }
+  
+    if(!this.newAnime) {
+      this.newAnime = false;
+      const restart = Nakamoto.prototype.HasSomeOneNew(this.newAnime)
+    }
+   
     await page.screenshot({ path: 'animes.png' });
 
     await browser.close();
