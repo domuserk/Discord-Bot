@@ -46,10 +46,6 @@ this.value = async () => {
   }
 }
 
-(async() => {
-  await this.value()
-})()
-
 const Promisse = async () => {
     fs.readFile('restartCommand.txt', 'utf8', async (err, data) => {
       const value = data.toLowerCase();
@@ -64,8 +60,6 @@ const Promisse = async () => {
     })
 }
  
-
-
 
 app.get('/' , async (req, res) => {
    try {
