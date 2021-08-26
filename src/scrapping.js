@@ -72,112 +72,119 @@ Nakamoto.prototype.HasSomeOneNew = (newAnime) => {
 
 
 Nakamoto.prototype.initScrapping = async (nameAnime) => {
+  try {
 
-  const browser = await puppeteer.launch({
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-    ],
-  });
-
-    const page = await browser.newPage();
-
-    await page.goto('https://animesonline.cc/tv/', {timeout: 60000, waitUntil: 'domcontentloaded'});
- 
-    await page.waitForSelector('title');
-
-    const title = await page.title();
-
-    await page.waitForSelector('input[id="s"]', {
-      visible: true,
-      timeout: 60000
+    const browser = await puppeteer.launch({
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+      ],
+      headless: false,
+      executablePath: '/usr/bin/chromium-browser',
+      ignoreDefaultArgs: ['--disable-extensions']
     });
-
-    await page.type('input[id="s"]', nameAnime)
   
-    await page.waitForSelector('button[class="search-button"]', {
-      visible: true,
-      timeout: 60000
-    });
-
-    let click = await page.click('button[class="search-button"]')
-
-    let pages = await browser.pages();
-
-    const pageToFront = await pages[1].bringToFront()
-    
-
-    await page.waitForSelector('div[class="poster"]', {
+      const page = await browser.newPage();
+  
+      await page.goto('https://animesonline.cc/tv/', {timeout: 60000, waitUntil: 'domcontentloaded'});
+   
+      await page.waitForSelector('title');
+  
+      const title = await page.title();
+  
+      await page.waitForSelector('input[id="s"]', {
         visible: true,
-    });
+        timeout: 60000
+      });
+  
+      await page.type('input[id="s"]', nameAnime)
     
-    await page.click('div[class="poster"]')
-
-    await page.waitForSelector('div[id="seasons"]', {
+      await page.waitForSelector('button[class="search-button"]', {
         visible: true,
-    });
-
-    let content = await pages[1].content()
-
-    const aHandle = await page.evaluateHandle(() => 
-      document.getElementById("seasons").lastElementChild
+        timeout: 60000
+      });
+  
+      let click = await page.click('button[class="search-button"]')
+  
+      let pages = await browser.pages();
+  
+      const pageToFront = await pages[1].bringToFront()
       
-    );
-
-    const resultHandle = await page.evaluateHandle(
-      (body) => body.innerHTML,
-      aHandle
-    );
-
-    const result = await resultHandle.jsonValue();
-
   
-    await resultHandle.dispose();
-
-    const episodes = await page.evaluate(() => Array.from(document.querySelectorAll('.se-c'), element => element.textContent));
-   
-    const name = await page.title()
-
-    const nameToDB = name.replace('Todos os Episodios Online - Animes Online', ' ')
-
-    
-    for(let i = 0; i < episodes.length; i++) {
-      this.episodesSize =  episodes[i]
-    }
-    
-    const test1 =  await Nakamoto.prototype.getEpisodes(nameToDB)
-
-    const dataToString = JSON.stringify(this.data)
-
-    const episodesSize = {
-      "episodes": this.episodesSize
-    }
+      await page.waitForSelector('div[class="poster"]', {
+          visible: true,
+      });
+      
+      await page.click('div[class="poster"]')
   
-    if(this.data){
-      if(this.data['episodes'].length < this.episodesSize.length) {
-        await Nakamoto.prototype.CreateAnime(this.episodesSize,  nameToDB)
-        this.newEpisode = true;
+      await page.waitForSelector('div[id="seasons"]', {
+          visible: true,
+      });
+  
+      let content = await pages[1].content()
+  
+      const aHandle = await page.evaluateHandle(() => 
+        document.getElementById("seasons").lastElementChild
+        
+      );
+  
+      const resultHandle = await page.evaluateHandle(
+        (body) => body.innerHTML,
+        aHandle
+      );
+  
+      const result = await resultHandle.jsonValue();
+  
+    
+      await resultHandle.dispose();
+  
+      const episodes = await page.evaluate(() => Array.from(document.querySelectorAll('.se-c'), element => element.textContent));
+     
+      const name = await page.title()
+  
+      const nameToDB = name.replace('Todos os Episodios Online - Animes Online', ' ')
+  
+      
+      for(let i = 0; i < episodes.length; i++) {
+        this.episodesSize =  episodes[i]
       }
-    }
-    console.log('chamou')
-    if(!this.data){
-      await Nakamoto.prototype.CreateAnime(this.episodesSize,  nameToDB)
-      this.newAnime = nameToDB
-    }
-
-    if(this.newAnime) {
-      const NewAnime = await nakamotoBotInit.init(this.newAnime)
-      const restart = Nakamoto.prototype.HasSomeOneNew(true)
-    }
+      
+      const test1 =  await Nakamoto.prototype.getEpisodes(nameToDB)
   
-    if(!this.newAnime) {
-      this.newAnime = false;
-      const restart = Nakamoto.prototype.HasSomeOneNew(this.newAnime)
-    }
-   
-    await page.screenshot({ path: 'animes.png' });
-
-    await browser.close();
+      const dataToString = JSON.stringify(this.data)
+  
+      const episodesSize = {
+        "episodes": this.episodesSize
+      }
+    
+      if(this.data){
+        if(this.data['episodes'].length < this.episodesSize.length) {
+          await Nakamoto.prototype.CreateAnime(this.episodesSize,  nameToDB)
+          this.newEpisode = true;
+        }
+      }
+      console.log('chamou')
+      if(!this.data){
+        await Nakamoto.prototype.CreateAnime(this.episodesSize,  nameToDB)
+        this.newAnime = nameToDB
+      }
+  
+      if(this.newAnime) {
+        const NewAnime = await nakamotoBotInit.init(this.newAnime)
+        const restart = Nakamoto.prototype.HasSomeOneNew(true)
+      }
+    
+      if(!this.newAnime) {
+        this.newAnime = false;
+        const restart = Nakamoto.prototype.HasSomeOneNew(this.newAnime)
+      }
+     
+      await page.screenshot({ path: 'animes.png' });
+  
+      await browser.close();
+  } catch(error) {
+    console.log('error', error);
+  }
 }
 
 module.exports = { Nakamoto }
