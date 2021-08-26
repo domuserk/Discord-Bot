@@ -78,6 +78,7 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
+        '--unhandled-rejections=strict'
       ],
       headless: false,
       executablePath: '/usr/bin/chromium-browser',
