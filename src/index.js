@@ -66,10 +66,9 @@ app.get('/' , async (req, res) => {
     const animeName = animes.forEach(async (anime) => {
     await nakamotoInit.initScrapping(anime.name)
    });
-   
     res.send()
    }catch(err) {
-    console.log(err)
+    console.log('errorGet', err)
   }
 })
 
