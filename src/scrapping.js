@@ -74,17 +74,11 @@ Nakamoto.prototype.HasSomeOneNew = (newAnime) => {
 Nakamoto.prototype.initScrapping = async (nameAnime) => {
   try {
 
-    const browser = await puppeteer.launch({
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--unhandled-rejections=strict'
-      ],
-      headless: false,
-      executablePath: '/usr/bin/chromium-browser',
-      ignoreDefaultArgs: ['--disable-extensions']
-    });
-  
+      const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox','--disable-setuid-sandbox']
+      });
+
       const page = await browser.newPage();
   
       await page.goto('https://animesonline.cc/tv/', {timeout: 60000, waitUntil: 'domcontentloaded'});
