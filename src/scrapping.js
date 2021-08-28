@@ -127,14 +127,13 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
         (body) => body.innerHTML,
         aHandle
       );
-  
+
       const result = await resultHandle.jsonValue();
-  
-    
+        
       await resultHandle.dispose();
   
       const episodes = await page.evaluate(() => Array.from(document.querySelectorAll('.se-c'), element => element.textContent));
-     
+      
       const name = await page.title()
   
       const nameToDB = name.replace('Todos os Episodios Online - Animes Online', ' ')
@@ -151,7 +150,30 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
       const episodesSize = {
         "episodes": this.episodesSize
       }
-    
+
+      const episodesList = resultHandle.toString().split(' ');
+      const lastEpisode = episodesList[episodesList.length - 6];
+
+      const lastEpisodeArray = Array.from(lastEpisode);
+      let initialIndex;
+      let lastIndex;
+
+      for(let i = 0; i < lastEpisodeArray.length; i++) {
+        const episodesIndex = lastEpisodeArray[i]
+        if(episodesIndex == '=') {
+          initialIndex = [i];
+        }
+        if(episodesIndex == '>') {
+          lastIndex = [i]
+        }
+      }
+  
+      const lastEpisodeUrl = lastEpisodeArray.slice(initialIndex, lastIndex - 2);
+
+      const stringLastEpisodeUrl = lastEpisodeUrl.join('');
+      
+      const removeCommaLastEpisodeURl = stringLastEpisodeUrl.replace(/[\\"=]/g, '')
+
       if(this.data){
         if(this.data['episodes'].length < this.episodesSize.length) {
           await Nakamoto.prototype.CreateAnime(this.episodesSize,  nameToDB)
@@ -165,7 +187,7 @@ Nakamoto.prototype.initScrapping = async (nameAnime) => {
       }
   
       if(this.newAnime) {
-        const NewAnime = await nakamotoBotInit.init(this.newAnime)
+        const newAnime = await nakamotoBotInit.init(this.newAnime, removeCommaLastEpisodeURl)
         const restart = Nakamoto.prototype.HasSomeOneNew(true)
       }
     
